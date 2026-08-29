@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -14,7 +15,7 @@ class AdhyayanApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'অধ্যয়ন',
       theme: ThemeData(
-        scaffoldBackgroundColor: const Color(0xFFF2F4F7), // Light Islamic Slate Background
+        scaffoldBackgroundColor: const Color(0xFFF2F4F7),
         fontFamily: 'Roboto',
       ),
       home: const HomeScreen(),
@@ -30,39 +31,59 @@ class HomeScreen extends StatelessWidget {
       'title': 'হোম',
       'url': 'https://oddhayoon.blogspot.com/p/home.html',
       'icon': Icons.menu_book_rounded,
-      'badgeColor': Color(0xFF2E7D32),
     },
     {
       'title': 'আজকের পড়া',
       'url': 'https://oddhayoon.blogspot.com/p/box-sizing-border-box-font-family-segoe.html',
       'icon': Icons.auto_stories_rounded,
-      'badgeColor': Color(0xFF1565C0),
     },
     {
       'title': 'পাঠচক্র',
       'url': 'https://oddhayoon.blogspot.com/p/studycircle.html',
       'icon': Icons.groups_rounded,
-      'badgeColor': Color(0xFFD84315),
     },
     {
       'title': 'আলোচনা চক্র',
       'url': 'https://oddhayoon.blogspot.com/p/discussioncircle.html',
       'icon': Icons.record_voice_over_rounded,
-      'badgeColor': Color(0xFF6A1B9A),
     },
     {
       'title': 'পাঠাগার',
       'url': 'https://oddhayoon.blogspot.com/p/library.html',
       'icon': Icons.local_library_rounded,
-      'badgeColor': Color(0xFF00695C),
     },
     {
       'title': 'নোটিশ',
       'url': 'https://oddhayoon.blogspot.com/p/notice.html',
       'icon': Icons.campaign_rounded,
-      'badgeColor': Color(0xFFC62828),
     },
   ];
+
+  void _showCalendarPicker(BuildContext context) {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2030),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: Color(0xFF1E5631),
+              onPrimary: Colors.white,
+              onSurface: Color(0xFF1E5631),
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: const Color(0xFF1E5631),
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +93,7 @@ class HomeScreen extends StatelessWidget {
         preferredSize: const Size.fromHeight(70),
         child: Container(
           decoration: const BoxDecoration(
-            color: Color(0xFF1E5631), // Islamic Primary Dark Green
+            color: Color(0xFF1E5631),
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(20),
               bottomRight: Radius.circular(20),
@@ -99,22 +120,26 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.15),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: const Color(0xFFE8C547).withOpacity(0.5), width: 1),
-                    ),
-                    child: const Row(
-                      children: [
-                        Icon(Icons.calendar_today_rounded, color: Color(0xFFE8C547), size: 14),
-                        SizedBox(width: 6),
-                        Text(
-                          'ইসলামিক জ্ঞান',
-                          style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w500),
-                        ),
-                      ],
+                  InkWell(
+                    borderRadius: BorderRadius.circular(20),
+                    onTap: () => _showCalendarPicker(context),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.15),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: const Color(0xFFE8C547).withOpacity(0.5), width: 1),
+                      ),
+                      child: const Row(
+                        children: [
+                          Icon(Icons.calendar_month_rounded, color: Color(0xFFE8C547), size: 16),
+                          SizedBox(width: 6),
+                          Text(
+                            'ক্যালেন্ডার',
+                            style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
                     ),
                   )
                 ],
@@ -123,211 +148,270 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            const SizedBox(height: 16),
-            
-            // Section Header (علم - ইলম Style)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Row(
-                children: [
-                  Container(
-                    width: 5,
-                    height: 22,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF1E5631),
-                      borderRadius: BorderRadius.circular(3),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  const Text(
-                    'ইলম ও সূচীপত্র',
-                    style: TextStyle(
-                      color: Color(0xFF1E5631),
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
+      body: Stack(
+        children: [
+          // Background Islamic Mandala Art
+          Positioned.fill(
+            child: CustomPaint(
+              painter: IslamicMandalaPainter(),
             ),
+          ),
 
-            const SizedBox(height: 14),
+          // Main Screen Content
+          SafeArea(
+            child: Column(
+              children: [
+                const Spacer(),
 
-            // Main Grid
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: GridView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: blogData.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                    childAspectRatio: 0.88,
-                  ),
-                  itemBuilder: (context, index) {
-                    final blog = blogData[index];
-                    return Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.04),
-                            blurRadius: 8,
-                            offset: const Offset(0, 3),
-                          ),
-                        ],
+                // Section Header
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 5,
+                        height: 22,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF1E5631),
+                          borderRadius: BorderRadius.circular(3),
+                        ),
                       ),
-                      child: Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(16),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => WebViewScreen(
-                                  url: blog['url']!,
-                                  title: blog['title']!,
+                      const SizedBox(width: 8),
+                      const Text(
+                        'ইলম ও সূচীপত্র',
+                        style: TextStyle(
+                          color: Color(0xFF1E5631),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                // Centered Grid Buttons
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: blogData.length,
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      crossAxisSpacing: 14,
+                      mainAxisSpacing: 16,
+                      childAspectRatio: 0.86,
+                    ),
+                    itemBuilder: (context, index) {
+                      final blog = blogData[index];
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.92),
+                          borderRadius: BorderRadius.circular(18),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0xFF1E5631).withOpacity(0.08),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(18),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => WebViewScreen(
+                                    url: blog['url']!,
+                                    title: blog['title']!,
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  width: 48,
-                                  height: 48,
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFF4F8F5),
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: const Color(0xFF1E5631).withOpacity(0.12),
-                                      width: 1,
+                              );
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 6.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    width: 48,
+                                    height: 48,
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFE8F5E9),
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: const Color(0xFF1E5631).withOpacity(0.18),
+                                        width: 1.2,
+                                      ),
+                                    ),
+                                    child: Icon(
+                                      blog['icon'],
+                                      color: const Color(0xFF1E5631),
+                                      size: 24,
                                     ),
                                   ),
-                                  child: Icon(
-                                    blog['icon'],
-                                    color: const Color(0xFF1E5631),
-                                    size: 24,
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    blog['title']!,
+                                    textAlign: TextAlign.center,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      color: Color(0xFF1E5631),
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold,
+                                      height: 1.2,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 10),
-                                Text(
-                                  blog['title']!,
-                                  textAlign: TextAlign.center,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    color: Color(0xFF2C3E50),
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600,
-                                    height: 1.2,
-                                  ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-
-            // Online Search Bar
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
-              child: Container(
-                width: double.infinity,
-                height: 52,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF1E5631),
-                  borderRadius: BorderRadius.circular(14),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFF1E5631).withOpacity(0.25),
-                      blurRadius: 8,
-                      offset: const Offset(0, 4),
+                        );
+                      },
                     ),
-                  ],
+                  ),
                 ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(14),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const WebViewScreen(
-                            url: 'https://www.google.com',
-                            title: 'অনলাইনে অনুসন্ধান করুন',
-                          ),
-                        ),
-                      );
-                    },
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.search_rounded, color: Color(0xFFE8C547), size: 22),
-                        SizedBox(width: 8),
-                        Text(
-                          'অনলাইনে অনুসন্ধান করুন',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
+
+                const Spacer(),
+
+                // Online Search Button
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                  child: Container(
+                    width: double.infinity,
+                    height: 52,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF1E5631),
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFF1E5631).withOpacity(0.25),
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
                         ),
                       ],
                     ),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(16),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const WebViewScreen(
+                                url: 'https://www.google.com',
+                                title: 'অনলাইনে অনুসন্ধান করুন',
+                              ),
+                            ),
+                          );
+                        },
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.search_rounded, color: Color(0xFFE8C547), size: 22),
+                            SizedBox(width: 8),
+                            Text(
+                              'অনলাইনে অনুসন্ধান করুন',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
 
-            // Developer Credit
-            Padding(
-              padding: const EdgeInsets.only(bottom: 12.0, top: 4.0),
-              child: Column(
-                children: [
-                  Text(
-                    'DEVELOPED BY',
-                    style: TextStyle(
-                      color: Colors.grey.shade600,
-                      fontSize: 9,
-                      letterSpacing: 1.8,
-                      fontWeight: FontWeight.bold,
-                    ),
+                // Developer Credit
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12.0, top: 4.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        'DEVELOPED BY',
+                        style: TextStyle(
+                          color: Colors.grey.shade600,
+                          fontSize: 9,
+                          letterSpacing: 1.8,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      const Text(
+                        'Talpatar sepai',
+                        style: TextStyle(
+                          color: Color(0xFF1E5631),
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.0,
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 2),
-                  const Text(
-                    'Talpatar sepai',
-                    style: TextStyle(
-                      color: Color(0xFF1E5631),
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1.0,
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
+}
+
+// Custom Islamic Geometric Mandala Painter
+class IslamicMandalaPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = const Color(0xFF1E5631).withOpacity(0.05)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.2;
+
+    final center = Offset(size.width / 2, size.height / 2.2);
+
+    for (double radius = 40; radius <= 200; radius += 35) {
+      canvas.drawCircle(center, radius, paint);
+      _draw8PointStar(canvas, center, radius, paint);
+    }
+  }
+
+  void _draw8PointStar(Canvas canvas, Offset center, double radius, Paint paint) {
+    final path1 = Path();
+    final path2 = Path();
+
+    for (int i = 0; i < 4; i++) {
+      double angle = (i * 90) * math.pi / 180;
+      double x = center.dx + radius * math.cos(angle);
+      double y = center.dy + radius * math.sin(angle);
+      if (i == 0) path1.moveTo(x, y); else path1.lineTo(x, y);
+    }
+    path1.close();
+
+    for (int i = 0; i < 4; i++) {
+      double angle = (i * 90 + 45) * math.pi / 180;
+      double x = center.dx + radius * math.cos(angle);
+      double y = center.dy + radius * math.sin(angle);
+      if (i == 0) path2.moveTo(x, y); else path2.lineTo(x, y);
+    }
+    path2.close();
+
+    canvas.drawPath(path1, paint);
+    canvas.drawPath(path2, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 class WebViewScreen extends StatefulWidget {
