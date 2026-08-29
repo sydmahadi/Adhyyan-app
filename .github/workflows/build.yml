@@ -10,6 +10,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Backup user code
+        run: |
+          mkdir -p ../temp_code
+          cp lib/main.dart ../temp_code/main.dart
+          cp pubspec.yaml ../temp_code/pubspec.yaml
+
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
@@ -21,8 +27,21 @@ jobs:
         with:
           channel: 'stable'
 
+      - name: Re-create Clean Flutter Project
+        run: |
+          cd ..
+          rm -rf $GITHUB_WORKSPACE/*
+          flutter create --org com.example --project-name adhyayan $GITHUB_WORKSPACE
+          cd $GITHUB_WORKSPACE
+          cp ../temp_code/main.dart lib/main.dart
+
+      - name: Update Android App Label to Bangla
+        run: |
+          sed -i 's/android:label="adhyayan"/android:label="অধ্যয়ন"/g' android/app/src/main/AndroidManifest.xml
+
       - name: Install Dependencies
-        run: flutter pub get
+        run: |
+          flutter pub add flutter_inappwebview
 
       - name: Build Release APK
         run: flutter build apk --release --no-tree-shake-icons
