@@ -21,6 +21,10 @@ jobs:
         with:
           channel: 'stable'
 
+      # মিসিং ফাইল ও প্রজেক্ট কনফিগারেশন অটোমেটিক তৈরি করার কমান্ড
+      - name: Create Flutter Project Structure
+        run: flutter create --overwrite .
+
       - name: Install dependencies
         run: flutter pub get
 
