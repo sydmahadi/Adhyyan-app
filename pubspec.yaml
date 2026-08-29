@@ -12,14 +12,5 @@ dependencies:
   flutter_inappwebview: ^6.0.0
   cupertino_icons: ^1.0.6
 
-dev_dependencies:
-  flutter_launcher_icons: ^0.13.1
-
-flutter_launcher_icons:
-  android: "ic_launcher"
-  ios: true
-  image_path: "icon.png"
-  min_sdk_android: 21
-
 flutter:
   uses-material-design: true
