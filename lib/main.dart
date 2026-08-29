@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 void main() {
   runApp(const AdhyayanApp());
@@ -239,8 +239,30 @@ class WebViewScreen extends StatefulWidget {
 }
 
 class _WebViewScreenState extends State<WebViewScreen> {
-  InAppWebViewController? webViewController;
-  double progress = 0;
+  late final WebViewController controller;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onPageStarted: (String url) {
+            setState(() {
+              isLoading = true;
+            });
+          },
+          onPageFinished: (String url) {
+            setState(() {
+              isLoading = false;
+            });
+          },
+        ),
+      )
+      ..loadRequest(Uri.parse(widget.url));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -260,23 +282,17 @@ class _WebViewScreenState extends State<WebViewScreen> {
           ),
           IconButton(
             icon: const Icon(Icons.refresh, color: Colors.white),
-            onPressed: () => webViewController?.reload(),
+            onPressed: () => controller.reload(),
           ),
         ],
       ),
       body: Column(
         children: [
-          progress < 1.0
-              ? LinearProgressIndicator(value: progress, color: const Color(0xFFC41E3A), backgroundColor: const Color(0xFFFDFBF7))
+          isLoading
+              ? const LinearProgressIndicator(color: Color(0xFFC41E3A), backgroundColor: Color(0xFFFDFBF7))
               : const SizedBox.shrink(),
           Expanded(
-            child: InAppWebView(
-              initialUrlRequest: URLRequest(url: WebUri(widget.url)),
-              onWebViewCreated: (controller) => webViewController = controller,
-              onProgressChanged: (controller, progress) {
-                setState(() => this.progress = progress / 100);
-              },
-            ),
+            child: WebViewWidget(controller: controller),
           ),
           Container(
             height: 55,
@@ -290,16 +306,16 @@ class _WebViewScreenState extends State<WebViewScreen> {
                 IconButton(
                   icon: const Icon(Icons.arrow_back_ios, color: Color(0xFF8B0000)),
                   onPressed: () async {
-                    if (await webViewController?.canGoBack() ?? false) {
-                      webViewController?.goBack();
+                    if (await controller.canGoBack()) {
+                      controller.goBack();
                     }
                   },
                 ),
                 IconButton(
                   icon: const Icon(Icons.arrow_forward_ios, color: Color(0xFF8B0000)),
                   onPressed: () async {
-                    if (await webViewController?.canGoForward() ?? false) {
-                      webViewController?.goForward();
+                    if (await controller.canGoForward()) {
+                      controller.goForward();
                     }
                   },
                 ),
