@@ -1,4 +1,4 @@
-name: adhyayan
+name: অধ্যয়ন 
 description: "অধ্যয়ন অ্যাপ"
 publish_to: 'none'
 version: 1.0.0+1
@@ -9,7 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_inappwebview: ^6.0.0
+  webview_flutter: ^4.7.0
 
 flutter:
   uses-material-design: true
