@@ -34,9 +34,10 @@ jobs:
           cd $GITHUB_WORKSPACE
           cp ../temp_code/main.dart lib/main.dart
 
-      - name: Update Android App Label to Bangla
+      - name: Enable Internet and HTTP Links in Android
         run: |
-          sed -i 's/android:label="adhyayan"/android:label="অধ্যয়ন"/g' android/app/src/main/AndroidManifest.xml
+          sed -i 's/<manifest xmlns:android="http:\/\/schemas.android.com\/apk\/res\/android">/<manifest xmlns:android="http:\/\/schemas.android.com\/apk\/res\/android">\n    <uses-permission android:name="android.permission.INTERNET"\/>/g' android/app/src/main/AndroidManifest.xml
+          sed -i 's/android:label="adhyayan"/android:label="অধ্যয়ন" android:usesCleartextTraffic="true"/g' android/app/src/main/AndroidManifest.xml
 
       - name: Install Dependencies
         run: |
