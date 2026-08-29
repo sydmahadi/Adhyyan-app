@@ -141,7 +141,7 @@ class HomeScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -150,20 +150,15 @@ class HomeScreen extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          // Background Islamic Mandala Art
           Positioned.fill(
             child: CustomPaint(
               painter: IslamicMandalaPainter(),
             ),
           ),
-
-          // Main Screen Content
           SafeArea(
             child: Column(
               children: [
                 const Spacer(),
-
-                // Section Header
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: Row(
@@ -189,10 +184,7 @@ class HomeScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-
                 const SizedBox(height: 20),
-
-                // Centered Grid Buttons
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: GridView.builder(
@@ -278,10 +270,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-
                 const Spacer(),
-
-                // Online Search Button
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
                   child: Container(
@@ -332,8 +321,6 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-
-                // Developer Credit
                 Padding(
                   padding: const EdgeInsets.only(bottom: 12.0, top: 4.0),
                   child: Column(
@@ -369,7 +356,6 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-// Custom Islamic Geometric Mandala Painter
 class IslamicMandalaPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
@@ -394,7 +380,11 @@ class IslamicMandalaPainter extends CustomPainter {
       double angle = (i * 90) * math.pi / 180;
       double x = center.dx + radius * math.cos(angle);
       double y = center.dy + radius * math.sin(angle);
-      if (i == 0) path1.moveTo(x, y); else path1.lineTo(x, y);
+      if (i == 0) {
+        path1.moveTo(x, y);
+      } else {
+        path1.lineTo(x, y);
+      }
     }
     path1.close();
 
@@ -402,7 +392,11 @@ class IslamicMandalaPainter extends CustomPainter {
       double angle = (i * 90 + 45) * math.pi / 180;
       double x = center.dx + radius * math.cos(angle);
       double y = center.dy + radius * math.sin(angle);
-      if (i == 0) path2.moveTo(x, y); else path2.lineTo(x, y);
+      if (i == 0) {
+        path2.moveTo(x, y);
+      } else {
+        path2.lineTo(x, y);
+      }
     }
     path2.close();
 
