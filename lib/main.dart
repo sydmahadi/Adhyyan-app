@@ -1,21 +1,10 @@
 import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 void main() {
   runApp(const AdhyayanApp());
-}
-
-class BlogItem {
-  final String title;
-  final String url;
-  final IconData icon;
-
-  const BlogItem({
-    required this.title,
-    required this.url,
-    required this.icon,
-  });
 }
 
 class AdhyayanApp extends StatelessWidget {
@@ -29,6 +18,9 @@ class AdhyayanApp extends StatelessWidget {
       theme: ThemeData(
         scaffoldBackgroundColor: const Color(0xFFF2F4F7),
         fontFamily: 'Roboto',
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF1E5631),
+        ),
       ),
       home: const HomeScreen(),
     );
@@ -38,41 +30,42 @@ class AdhyayanApp extends StatelessWidget {
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  final List<BlogItem> blogData = const [
-    BlogItem(
-      title: 'হোম',
-      url: 'https://oddhayoon.blogspot.com/p/home.html',
-      icon: Icons.menu_book_rounded,
-    ),
-    BlogItem(
-      title: 'আজকের পড়া',
-      url: 'https://oddhayoon.blogspot.com/p/box-sizing-border-box-font-family-segoe.html',
-      icon: Icons.auto_stories_rounded,
-    ),
-    BlogItem(
-      title: 'পাঠচক্র',
-      url: 'https://oddhayoon.blogspot.com/p/studycircle.html',
-      icon: Icons.groups_rounded,
-    ),
-    BlogItem(
-      title: 'আলোচনা চক্র',
-      url: 'https://oddhayoon.blogspot.com/p/discussioncircle.html',
-      icon: Icons.record_voice_over_rounded,
-    ),
-    BlogItem(
-      title: 'পাঠাগার',
-      url: 'https://oddhayoon.blogspot.com/p/library.html',
-      icon: Icons.local_library_rounded,
-    ),
-    BlogItem(
-      title: 'নোটিশ',
-      url: 'https://oddhayoon.blogspot.com/p/notice.html',
-      icon: Icons.campaign_rounded,
-    ),
+  static const List<Map<String, dynamic>> blogData = [
+    {
+      'title': 'হোম',
+      'url': 'https://oddhayoon.blogspot.com/p/home.html',
+      'icon': Icons.menu_book_rounded,
+    },
+    {
+      'title': 'আজকের পড়া',
+      'url':
+          'https://oddhayoon.blogspot.com/p/box-sizing-border-box-font-family-segoe.html',
+      'icon': Icons.auto_stories_rounded,
+    },
+    {
+      'title': 'পাঠচক্র',
+      'url': 'https://oddhayoon.blogspot.com/p/studycircle.html',
+      'icon': Icons.groups_rounded,
+    },
+    {
+      'title': 'আলোচনা চক্র',
+      'url': 'https://oddhayoon.blogspot.com/p/discussioncircle.html',
+      'icon': Icons.record_voice_over_rounded,
+    },
+    {
+      'title': 'পাঠাগার',
+      'url': 'https://oddhayoon.blogspot.com/p/library.html',
+      'icon': Icons.local_library_rounded,
+    },
+    {
+      'title': 'নোটিশ',
+      'url': 'https://oddhayoon.blogspot.com/p/notice.html',
+      'icon': Icons.campaign_rounded,
+    },
   ];
 
-  void _showCalendarPicker(BuildContext context) async {
-    final DateTime? pickedDate = await showDatePicker(
+  Future<void> _showCalendarPicker(BuildContext context) async {
+    final selectedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2020),
@@ -91,15 +84,33 @@ class HomeScreen extends StatelessWidget {
       },
     );
 
-    if (pickedDate != null && context.mounted) {
+    if (selectedDate != null && context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('নির্বাচিত তারিখ: ${pickedDate.day}/${pickedDate.month}/${pickedDate.year}'),
+          content: Text(
+            'নির্বাচিত তারিখ: '
+            '${selectedDate.day}/${selectedDate.month}/${selectedDate.year}',
+          ),
           backgroundColor: const Color(0xFF1E5631),
-          duration: const Duration(seconds: 2),
         ),
       );
     }
+  }
+
+  void _openWebView(
+    BuildContext context, {
+    required String url,
+    required String title,
+  }) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => WebViewScreen(
+          url: url,
+          title: title,
+        ),
+      ),
+    );
   }
 
   @override
@@ -118,13 +129,20 @@ class HomeScreen extends StatelessWidget {
           ),
           child: SafeArea(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 10,
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Row(
                     children: [
-                      Icon(Icons.mosque_rounded, color: Color(0xFFE8C547), size: 28),
+                      Icon(
+                        Icons.mosque_rounded,
+                        color: Color(0xFFE8C547),
+                        size: 28,
+                      ),
                       SizedBox(width: 10),
                       Text(
                         'অধ্যয়ন',
@@ -140,19 +158,33 @@ class HomeScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                     onTap: () => _showCalendarPicker(context),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.15),
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: const Color(0xFFE8C547).withOpacity(0.5), width: 1),
+                        border: Border.all(
+                          color: const Color(0xFFE8C547).withOpacity(0.5),
+                          width: 1,
+                        ),
                       ),
                       child: const Row(
                         children: [
-                          Icon(Icons.calendar_month_rounded, color: Color(0xFFE8C547), size: 16),
+                          Icon(
+                            Icons.calendar_month_rounded,
+                            color: Color(0xFFE8C547),
+                            size: 16,
+                          ),
                           SizedBox(width: 6),
                           Text(
                             'ক্যালেন্ডার',
-                            style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ],
                       ),
@@ -175,8 +207,10 @@ class HomeScreen extends StatelessWidget {
             child: Column(
               children: [
                 const Spacer(),
+
+                // Section Title
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -200,14 +234,18 @@ class HomeScreen extends StatelessWidget {
                     ],
                   ),
                 ),
+
                 const SizedBox(height: 20),
+
+                // Menu Grid
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: GridView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: blogData.length,
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3,
                       crossAxisSpacing: 14,
                       mainAxisSpacing: 16,
@@ -215,6 +253,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                     itemBuilder: (context, index) {
                       final blog = blogData[index];
+
                       return Container(
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.92),
@@ -232,18 +271,17 @@ class HomeScreen extends StatelessWidget {
                           child: InkWell(
                             borderRadius: BorderRadius.circular(18),
                             onTap: () {
-                              Navigator.push(
+                              _openWebView(
                                 context,
-                                MaterialPageRoute(
-                                  builder: (context) => WebViewScreen(
-                                    url: blog.url,
-                                    title: blog.title,
-                                  ),
-                                ),
+                                url: blog['url'] as String,
+                                title: blog['title'] as String,
                               );
                             },
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 6.0),
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 12,
+                                horizontal: 6,
+                              ),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -254,19 +292,20 @@ class HomeScreen extends StatelessWidget {
                                       color: const Color(0xFFE8F5E9),
                                       shape: BoxShape.circle,
                                       border: Border.all(
-                                        color: const Color(0xFF1E5631).withOpacity(0.18),
+                                        color: const Color(0xFF1E5631)
+                                            .withOpacity(0.18),
                                         width: 1.2,
                                       ),
                                     ),
                                     child: Icon(
-                                      blog.icon,
+                                      blog['icon'] as IconData,
                                       color: const Color(0xFF1E5631),
                                       size: 24,
                                     ),
                                   ),
                                   const SizedBox(height: 10),
                                   Text(
-                                    blog.title,
+                                    blog['title'] as String,
                                     textAlign: TextAlign.center,
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
@@ -281,14 +320,20 @@ class HomeScreen extends StatelessWidget {
                               ),
                             ),
                           ),
-                        );
-                      },
-                    ),
+                        ),
+                      );
+                    },
                   ),
                 ),
+
                 const Spacer(),
+
+                // Online Search Button
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 10,
+                  ),
                   child: Container(
                     width: double.infinity,
                     height: 52,
@@ -308,20 +353,20 @@ class HomeScreen extends StatelessWidget {
                       child: InkWell(
                         borderRadius: BorderRadius.circular(16),
                         onTap: () {
-                          Navigator.push(
+                          _openWebView(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => const WebViewScreen(
-                                url: 'https://www.google.com',
-                                title: 'অনলাইনে অনুসন্ধান করুন',
-                              ),
-                            ),
+                            url: 'https://www.google.com',
+                            title: 'অনলাইনে অনুসন্ধান করুন',
                           );
                         },
                         child: const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.search_rounded, color: Color(0xFFE8C547), size: 22),
+                            Icon(
+                              Icons.search_rounded,
+                              color: Color(0xFFE8C547),
+                              size: 22,
+                            ),
                             SizedBox(width: 8),
                             Text(
                               'অনলাইনে অনুসন্ধান করুন',
@@ -337,8 +382,13 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+
+                // Developer
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 12.0, top: 4.0),
+                  padding: const EdgeInsets.only(
+                    bottom: 12,
+                    top: 4,
+                  ),
                   child: Column(
                     children: [
                       Text(
@@ -379,7 +429,10 @@ class IslamicMandalaPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.2;
 
-    final center = Offset(size.width / 2, size.height / 2.2);
+    final center = Offset(
+      size.width / 2,
+      size.height / 2.2,
+    );
 
     for (double radius = 40; radius <= 200; radius += 35) {
       canvas.drawCircle(center, radius, paint);
@@ -387,32 +440,45 @@ class IslamicMandalaPainter extends CustomPainter {
     }
   }
 
-  void _draw8PointStar(Canvas canvas, Offset center, double radius, Paint paint) {
+  void _draw8PointStar(
+    Canvas canvas,
+    Offset center,
+    double radius,
+    Paint paint,
+  ) {
     final path1 = Path();
     final path2 = Path();
 
+    // First square
     for (int i = 0; i < 4; i++) {
-      double angle = (i * 90) * math.pi / 180;
-      double x = center.dx + radius * math.cos(angle);
-      double y = center.dy + radius * math.sin(angle);
+      final angle = i * 90 * math.pi / 180;
+
+      final x = center.dx + radius * math.cos(angle);
+      final y = center.dy + radius * math.sin(angle);
+
       if (i == 0) {
         path1.moveTo(x, y);
       } else {
         path1.lineTo(x, y);
       }
     }
+
     path1.close();
 
+    // Rotated square
     for (int i = 0; i < 4; i++) {
-      double angle = (i * 90 + 45) * math.pi / 180;
-      double x = center.dx + radius * math.cos(angle);
-      double y = center.dy + radius * math.sin(angle);
+      final angle = (i * 90 + 45) * math.pi / 180;
+
+      final x = center.dx + radius * math.cos(angle);
+      final y = center.dy + radius * math.sin(angle);
+
       if (i == 0) {
         path2.moveTo(x, y);
       } else {
         path2.lineTo(x, y);
       }
     }
+
     path2.close();
 
     canvas.drawPath(path1, paint);
@@ -420,13 +486,20 @@ class IslamicMandalaPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return false;
+  }
 }
 
 class WebViewScreen extends StatefulWidget {
   final String url;
   final String title;
-  const WebViewScreen({super.key, required this.url, required this.title});
+
+  const WebViewScreen({
+    super.key,
+    required this.url,
+    required this.title,
+  });
 
   @override
   State<WebViewScreen> createState() => _WebViewScreenState();
@@ -434,11 +507,13 @@ class WebViewScreen extends StatefulWidget {
 
 class _WebViewScreenState extends State<WebViewScreen> {
   late final WebViewController controller;
+
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
+
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(
@@ -457,9 +532,28 @@ class _WebViewScreenState extends State<WebViewScreen> {
               });
             }
           },
+          onWebResourceError: (WebResourceError error) {
+            if (mounted) {
+              setState(() {
+                isLoading = false;
+              });
+            }
+          },
         ),
       )
       ..loadRequest(Uri.parse(widget.url));
+  }
+
+  Future<void> _goBack() async {
+    if (await controller.canGoBack()) {
+      await controller.goBack();
+    }
+  }
+
+  Future<void> _goForward() async {
+    if (await controller.canGoForward()) {
+      await controller.goForward();
+    }
   }
 
   @override
@@ -470,35 +564,53 @@ class _WebViewScreenState extends State<WebViewScreen> {
         backgroundColor: const Color(0xFF1E5631),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: Colors.white,
+            size: 20,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           widget.title,
-          style: const TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 17,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.home_rounded, color: Color(0xFFE8C547)),
+            icon: const Icon(
+              Icons.home_rounded,
+              color: Color(0xFFE8C547),
+            ),
             onPressed: () => Navigator.pop(context),
           ),
           IconButton(
-            icon: const Icon(Icons.refresh_rounded, color: Colors.white),
+            icon: const Icon(
+              Icons.refresh_rounded,
+              color: Colors.white,
+            ),
             onPressed: () => controller.reload(),
           ),
         ],
       ),
       body: Column(
         children: [
-          isLoading
-              ? const LinearProgressIndicator(
-                  color: Color(0xFFE8C547),
-                  backgroundColor: Color(0xFF1E5631),
-                )
-              : const SizedBox.shrink(),
+          if (isLoading)
+            const LinearProgressIndicator(
+              color: Color(0xFFE8C547),
+              backgroundColor: Color(0xFF1E5631),
+            ),
+
           Expanded(
-            child: WebViewWidget(controller: controller),
+            child: WebViewWidget(
+              controller: controller,
+            ),
           ),
+
+          // Bottom Navigation
           Container(
             height: 52,
             decoration: BoxDecoration(
@@ -515,23 +627,26 @@ class _WebViewScreenState extends State<WebViewScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 IconButton(
-                  icon: const Icon(Icons.arrow_back_ios_rounded, color: Color(0xFF1E5631), size: 20),
-                  onPressed: () async {
-                    if (await controller.canGoBack()) {
-                      controller.goBack();
-                    }
-                  },
+                  icon: const Icon(
+                    Icons.arrow_back_ios_rounded,
+                    color: Color(0xFF1E5631),
+                    size: 20,
+                  ),
+                  onPressed: _goBack,
                 ),
                 IconButton(
-                  icon: const Icon(Icons.arrow_forward_ios_rounded, color: Color(0xFF1E5631), size: 20),
-                  onPressed: () async {
-                    if (await controller.canGoForward()) {
-                      controller.goForward();
-                    }
-                  },
+                  icon: const Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    color: Color(0xFF1E5631),
+                    size: 20,
+                  ),
+                  onPressed: _goForward,
                 ),
                 IconButton(
-                  icon: const Icon(Icons.home_outlined, color: Color(0xFF1E5631)),
+                  icon: const Icon(
+                    Icons.home_outlined,
+                    color: Color(0xFF1E5631),
+                  ),
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
