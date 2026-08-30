@@ -179,7 +179,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                Padding(
+                                Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: GridView.builder(
                     shrinkWrap: true,
@@ -520,3 +520,4 @@ class _WebViewScreenState extends State<WebViewScreen> {
     );
   }
 }
+
