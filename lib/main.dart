@@ -1,4 +1,4 @@
-import 'dart:math' as math;
+import 'dartd:math' as math;
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -179,7 +179,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                                Padding(
+                Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: GridView.builder(
                     shrinkWrap: true,
@@ -520,4 +520,3 @@ class _WebViewScreenState extends State<WebViewScreen> {
     );
   }
 }
-
