@@ -1,9 +1,21 @@
-import 'dartd:math' as math;
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 void main() {
   runApp(const AdhyayanApp());
+}
+
+class BlogItem {
+  final String title;
+  final String url;
+  final IconData icon;
+
+  const BlogItem({
+    required this.title,
+    required this.url,
+    required this.icon,
+  });
 }
 
 class AdhyayanApp extends StatelessWidget {
@@ -26,41 +38,41 @@ class AdhyayanApp extends StatelessWidget {
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  final List<Map<String, dynamic>> blogData = const [
-    {
-      'title': 'হোম',
-      'url': 'https://oddhayoon.blogspot.com/p/home.html',
-      'icon': Icons.menu_book_rounded,
-    },
-    {
-      'title': 'আজকের পড়া',
-      'url': 'https://oddhayoon.blogspot.com/p/box-sizing-border-box-font-family-segoe.html',
-      'icon': Icons.auto_stories_rounded,
-    },
-    {
-      'title': 'পাঠচক্র',
-      'url': 'https://oddhayoon.blogspot.com/p/studycircle.html',
-      'icon': Icons.groups_rounded,
-    },
-    {
-      'title': 'আলোচনা চক্র',
-      'url': 'https://oddhayoon.blogspot.com/p/discussioncircle.html',
-      'icon': Icons.record_voice_over_rounded,
-    },
-    {
-      'title': 'পাঠাগার',
-      'url': 'https://oddhayoon.blogspot.com/p/library.html',
-      'icon': Icons.local_library_rounded,
-    },
-    {
-      'title': 'নোটিশ',
-      'url': 'https://oddhayoon.blogspot.com/p/notice.html',
-      'icon': Icons.campaign_rounded,
-    },
+  final List<BlogItem> blogData = const [
+    BlogItem(
+      title: 'হোম',
+      url: 'https://oddhayoon.blogspot.com/p/home.html',
+      icon: Icons.menu_book_rounded,
+    ),
+    BlogItem(
+      title: 'আজকের পড়া',
+      url: 'https://oddhayoon.blogspot.com/p/box-sizing-border-box-font-family-segoe.html',
+      icon: Icons.auto_stories_rounded,
+    ),
+    BlogItem(
+      title: 'পাঠচক্র',
+      url: 'https://oddhayoon.blogspot.com/p/studycircle.html',
+      icon: Icons.groups_rounded,
+    ),
+    BlogItem(
+      title: 'আলোচনা চক্র',
+      url: 'https://oddhayoon.blogspot.com/p/discussioncircle.html',
+      icon: Icons.record_voice_over_rounded,
+    ),
+    BlogItem(
+      title: 'পাঠাগার',
+      url: 'https://oddhayoon.blogspot.com/p/library.html',
+      icon: Icons.local_library_rounded,
+    ),
+    BlogItem(
+      title: 'নোটিশ',
+      url: 'https://oddhayoon.blogspot.com/p/notice.html',
+      icon: Icons.campaign_rounded,
+    ),
   ];
 
-  void _showCalendarPicker(BuildContext context) {
-    showDatePicker(
+  void _showCalendarPicker(BuildContext context) async {
+    final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2020),
@@ -78,6 +90,16 @@ class HomeScreen extends StatelessWidget {
         );
       },
     );
+
+    if (pickedDate != null && context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('নির্বাচিত তারিখ: ${pickedDate.day}/${pickedDate.month}/${pickedDate.year}'),
+          backgroundColor: const Color(0xFF1E5631),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    }
   }
 
   @override
@@ -214,8 +236,8 @@ class HomeScreen extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => WebViewScreen(
-                                    url: blog['url']!,
-                                    title: blog['title']!,
+                                    url: blog.url,
+                                    title: blog.title,
                                   ),
                                 ),
                               );
@@ -237,14 +259,14 @@ class HomeScreen extends StatelessWidget {
                                       ),
                                     ),
                                     child: Icon(
-                                      blog['icon'],
+                                      blog.icon,
                                       color: const Color(0xFF1E5631),
                                       size: 24,
                                     ),
                                   ),
                                   const SizedBox(height: 10),
                                   Text(
-                                    blog['title']!,
+                                    blog.title,
                                     textAlign: TextAlign.center,
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
