@@ -73,11 +73,6 @@ class HomeScreen extends StatelessWidget {
               onPrimary: Colors.white,
               onSurface: Color(0xFF1E5631),
             ),
-            textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(
-                foregroundColor: const Color(0xFF1E5631),
-              ),
-            ),
           ),
           child: child!,
         );
@@ -115,7 +110,6 @@ class HomeScreen extends StatelessWidget {
                           color: Colors.white,
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
-                          letterSpacing: 1.0,
                         ),
                       ),
                     ],
@@ -341,7 +335,6 @@ class HomeScreen extends StatelessWidget {
                           color: Color(0xFF1E5631),
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
-                          letterSpacing: 1.0,
                         ),
                       ),
                     ],
@@ -429,14 +422,18 @@ class _WebViewScreenState extends State<WebViewScreen> {
       ..setNavigationDelegate(
         NavigationDelegate(
           onPageStarted: (String url) {
-            setState(() {
-              isLoading = true;
-            });
+            if (mounted) {
+              setState(() {
+                isLoading = true;
+              });
+            }
           },
           onPageFinished: (String url) {
-            setState(() {
-              isLoading = false;
-            });
+            if (mounted) {
+              setState(() {
+                isLoading = false;
+              });
+            }
           },
         ),
       )
