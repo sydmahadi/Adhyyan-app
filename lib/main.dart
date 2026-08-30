@@ -7,6 +7,10 @@ void main() {
   runApp(const AdhyayanApp());
 }
 
+// ============================================================
+// APP
+// ============================================================
+
 class AdhyayanApp extends StatelessWidget {
   const AdhyayanApp({super.key});
 
@@ -16,16 +20,37 @@ class AdhyayanApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'অধ্যয়ন',
       theme: ThemeData(
-        scaffoldBackgroundColor: const Color(0xFFF2F4F7),
+        useMaterial3: true,
         fontFamily: 'Roboto',
+        scaffoldBackgroundColor: const Color(0xFFF4F1E8),
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF1E5631),
+          seedColor: const Color(0xFF123F2A),
         ),
       ),
       home: const HomeScreen(),
     );
   }
 }
+
+// ============================================================
+// COLORS
+// ============================================================
+
+class AppColors {
+  static const darkGreen = Color(0xFF082A1D);
+  static const green = Color(0xFF123F2A);
+  static const lightGreen = Color(0xFF1E5631);
+
+  static const gold = Color(0xFFE8C547);
+  static const softGold = Color(0xFFF3D978);
+
+  static const cream = Color(0xFFF4F1E8);
+  static const white = Color(0xFFFFFFFF);
+}
+
+// ============================================================
+// HOME SCREEN
+// ============================================================
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -69,14 +94,14 @@ class HomeScreen extends StatelessWidget {
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2020),
-      lastDate: DateTime(2030),
+      lastDate: DateTime(2035),
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: const ColorScheme.light(
-              primary: Color(0xFF1E5631),
+              primary: AppColors.green,
               onPrimary: Colors.white,
-              onSurface: Color(0xFF1E5631),
+              onSurface: AppColors.green,
             ),
           ),
           child: child!,
@@ -87,17 +112,21 @@ class HomeScreen extends StatelessWidget {
     if (selectedDate != null && context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
+          backgroundColor: AppColors.darkGreen,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
           content: Text(
             'নির্বাচিত তারিখ: '
             '${selectedDate.day}/${selectedDate.month}/${selectedDate.year}',
           ),
-          backgroundColor: const Color(0xFF1E5631),
         ),
       );
     }
   }
 
-  void _openWebView(
+  void _openPage(
     BuildContext context, {
     required String url,
     required String title,
@@ -105,7 +134,7 @@ class HomeScreen extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => WebViewScreen(
+        builder: (_) => WebViewScreen(
           url: url,
           title: title,
         ),
@@ -116,373 +145,745 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF2F4F7),
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(70),
-        child: Container(
-          decoration: const BoxDecoration(
-            color: Color(0xFF1E5631),
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(20),
-              bottomRight: Radius.circular(20),
-            ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFFF0EEE4),
+              Color(0xFFF8F6EF),
+              Color(0xFFE7E9DF),
+            ],
           ),
-          child: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 10,
+        ),
+        child: Stack(
+          children: [
+            // Islamic background pattern
+            Positioned.fill(
+              child: CustomPaint(
+                painter: IslamicBackgroundPainter(),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            ),
+
+            SafeArea(
+              child: Column(
                 children: [
+                  // ==================================================
+                  // TOP HEADER
+                  // ==================================================
+
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(14, 10, 14, 0),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 18,
+                      vertical: 13,
+                    ),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [
+                          AppColors.darkGreen,
+                          AppColors.green,
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(24),
+                      border: Border.all(
+                        color: AppColors.gold.withOpacity(0.55),
+                        width: 1,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.darkGreen.withOpacity(0.22),
+                          blurRadius: 16,
+                          offset: const Offset(0, 7),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        // Logo
+                        Container(
+                          width: 48,
+                          height: 48,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColors.gold.withOpacity(0.13),
+                            border: Border.all(
+                              color: AppColors.gold.withOpacity(0.65),
+                              width: 1,
+                            ),
+                          ),
+                          child: const Icon(
+                            Icons.mosque_rounded,
+                            color: AppColors.gold,
+                            size: 27,
+                          ),
+                        ),
+
+                        const SizedBox(width: 12),
+
+                        // Title
+                        const Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'অধ্যয়ন',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 23,
+                                  fontWeight: FontWeight.w800,
+                                  letterSpacing: 0.3,
+                                ),
+                              ),
+                              SizedBox(height: 2),
+                              Text(
+                                'ইলম • চিন্তা • জ্ঞান',
+                                style: TextStyle(
+                                  color: AppColors.softGold,
+                                  fontSize: 10,
+                                  letterSpacing: 1.2,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        // Calendar
+                        InkWell(
+                          borderRadius: BorderRadius.circular(18),
+                          onTap: () => _showCalendarPicker(context),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 11,
+                              vertical: 9,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.08),
+                              borderRadius: BorderRadius.circular(18),
+                              border: Border.all(
+                                color: AppColors.gold.withOpacity(0.45),
+                              ),
+                            ),
+                            child: const Column(
+                              children: [
+                                Icon(
+                                  Icons.calendar_month_rounded,
+                                  color: AppColors.gold,
+                                  size: 20,
+                                ),
+                                SizedBox(height: 2),
+                                Text(
+                                  'ক্যালেন্ডার',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 18),
+
+                  // ==================================================
+                  // BISMILLAH / DECORATION
+                  // ==================================================
+
                   const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      DecorativeLine(),
+                      SizedBox(width: 10),
                       Icon(
-                        Icons.mosque_rounded,
-                        color: Color(0xFFE8C547),
-                        size: 28,
+                        Icons.auto_awesome_rounded,
+                        color: AppColors.gold,
+                        size: 18,
                       ),
                       SizedBox(width: 10),
-                      Text(
-                        'অধ্যয়ন',
+                      DecorativeLine(),
+                    ],
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  // ==================================================
+                  // SECTION TITLE
+                  // ==================================================
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 4,
+                        height: 24,
+                        decoration: BoxDecoration(
+                          color: AppColors.green,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
+                      const SizedBox(width: 9),
+                      const Text(
+                        'ইলম ও সূচীপত্র',
                         style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
+                          color: AppColors.darkGreen,
+                          fontSize: 19,
+                          fontWeight: FontWeight.w800,
                         ),
                       ),
                     ],
                   ),
-                  InkWell(
-                    borderRadius: BorderRadius.circular(20),
-                    onTap: () => _showCalendarPicker(context),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.15),
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color: const Color(0xFFE8C547).withOpacity(0.5),
-                          width: 1,
+
+                  const SizedBox(height: 5),
+
+                  const Text(
+                    'জ্ঞান অন্বেষণে প্রতিদিন এক ধাপ',
+                    style: TextStyle(
+                      color: Color(0xFF657066),
+                      fontSize: 11,
+                    ),
+                  ),
+
+                  const SizedBox(height: 18),
+
+                  // ==================================================
+                  // MENU GRID
+                  // ==================================================
+
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: GridView.builder(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        itemCount: blogData.length,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 11,
+                          mainAxisSpacing: 12,
+                          childAspectRatio: 0.78,
                         ),
+                        itemBuilder: (context, index) {
+                          final item = blogData[index];
+
+                          return IslamicMenuCard(
+                            title: item['title'] as String,
+                            icon: item['icon'] as IconData,
+                            onTap: () {
+                              _openPage(
+                                context,
+                                url: item['url'] as String,
+                                title: item['title'] as String,
+                              );
+                            },
+                          );
+                        },
                       ),
-                      child: const Row(
-                        children: [
-                          Icon(
-                            Icons.calendar_month_rounded,
-                            color: Color(0xFFE8C547),
-                            size: 16,
-                          ),
-                          SizedBox(width: 6),
-                          Text(
-                            'ক্যালেন্ডার',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
-                            ),
+                    ),
+                  ),
+
+                  // ==================================================
+                  // SEARCH BUTTON
+                  // ==================================================
+
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(18, 4, 18, 8),
+                    child: Container(
+                      height: 55,
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [
+                            AppColors.darkGreen,
+                            AppColors.green,
+                            AppColors.lightGreen,
+                          ],
+                        ),
+                        borderRadius: BorderRadius.circular(18),
+                        border: Border.all(
+                          color: AppColors.gold.withOpacity(0.55),
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.green.withOpacity(0.25),
+                            blurRadius: 12,
+                            offset: const Offset(0, 5),
                           ),
                         ],
                       ),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(18),
+                          onTap: () {
+                            _openPage(
+                              context,
+                              url: 'https://www.google.com',
+                              title: 'অনলাইনে অনুসন্ধান করুন',
+                            );
+                          },
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.search_rounded,
+                                color: AppColors.gold,
+                                size: 24,
+                              ),
+                              SizedBox(width: 9),
+                              Text(
+                                'অনলাইনে অনুসন্ধান করুন',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              SizedBox(width: 6),
+                              Icon(
+                                Icons.arrow_forward_rounded,
+                                color: AppColors.softGold,
+                                size: 17,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // ==================================================
+                  // DEVELOPER
+                  // ==================================================
+
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 9),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'DEVELOPED BY',
+                          style: TextStyle(
+                            color: Colors.grey.shade600,
+                            fontSize: 7,
+                            letterSpacing: 1.5,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(width: 5),
+                        Container(
+                          width: 4,
+                          height: 4,
+                          decoration: const BoxDecoration(
+                            color: AppColors.gold,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        const SizedBox(width: 5),
+                        const Text(
+                          'Talpatar sepai',
+                          style: TextStyle(
+                            color: AppColors.green,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
-          ),
+          ],
         ),
-      ),
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: CustomPaint(
-              painter: IslamicMandalaPainter(),
-            ),
-          ),
-          SafeArea(
-            child: Column(
-              children: [
-                const Spacer(),
-
-                // Section Title
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 5,
-                        height: 22,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF1E5631),
-                          borderRadius: BorderRadius.circular(3),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      const Text(
-                        'ইলম ও সূচীপত্র',
-                        style: TextStyle(
-                          color: Color(0xFF1E5631),
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                // Menu Grid
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: blogData.length,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      crossAxisSpacing: 14,
-                      mainAxisSpacing: 16,
-                      childAspectRatio: 0.86,
-                    ),
-                    itemBuilder: (context, index) {
-                      final blog = blogData[index];
-
-                      return Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.92),
-                          borderRadius: BorderRadius.circular(18),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xFF1E5631).withOpacity(0.08),
-                              blurRadius: 10,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(18),
-                            onTap: () {
-                              _openWebView(
-                                context,
-                                url: blog['url'] as String,
-                                title: blog['title'] as String,
-                              );
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 12,
-                                horizontal: 6,
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    width: 48,
-                                    height: 48,
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFFE8F5E9),
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: const Color(0xFF1E5631)
-                                            .withOpacity(0.18),
-                                        width: 1.2,
-                                      ),
-                                    ),
-                                    child: Icon(
-                                      blog['icon'] as IconData,
-                                      color: const Color(0xFF1E5631),
-                                      size: 24,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    blog['title'] as String,
-                                    textAlign: TextAlign.center,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                      color: Color(0xFF1E5631),
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.bold,
-                                      height: 1.2,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-
-                const Spacer(),
-
-                // Online Search Button
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 10,
-                  ),
-                  child: Container(
-                    width: double.infinity,
-                    height: 52,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF1E5631),
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0xFF1E5631).withOpacity(0.25),
-                          blurRadius: 8,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(16),
-                        onTap: () {
-                          _openWebView(
-                            context,
-                            url: 'https://www.google.com',
-                            title: 'অনলাইনে অনুসন্ধান করুন',
-                          );
-                        },
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.search_rounded,
-                              color: Color(0xFFE8C547),
-                              size: 22,
-                            ),
-                            SizedBox(width: 8),
-                            Text(
-                              'অনলাইনে অনুসন্ধান করুন',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                // Developer
-                Padding(
-                  padding: const EdgeInsets.only(
-                    bottom: 12,
-                    top: 4,
-                  ),
-                  child: Column(
-                    children: [
-                      Text(
-                        'DEVELOPED BY',
-                        style: TextStyle(
-                          color: Colors.grey.shade600,
-                          fontSize: 9,
-                          letterSpacing: 1.8,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      const Text(
-                        'Talpatar sepai',
-                        style: TextStyle(
-                          color: Color(0xFF1E5631),
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }
 }
 
-class IslamicMandalaPainter extends CustomPainter {
+// ============================================================
+// DECORATIVE LINE
+// ============================================================
+
+class DecorativeLine extends StatelessWidget {
+  const DecorativeLine({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 55,
+      height: 1,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Colors.transparent,
+            AppColors.gold.withOpacity(0.8),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ============================================================
+// ISLAMIC MENU CARD
+// ============================================================
+
+class IslamicMenuCard extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final VoidCallback onTap;
+
+  const IslamicMenuCard({
+    super.key,
+    required this.title,
+    required this.icon,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(22),
+        onTap: onTap,
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Colors.white.withOpacity(0.96),
+                const Color(0xFFF2F0E7).withOpacity(0.95),
+              ],
+            ),
+            borderRadius: BorderRadius.circular(22),
+            border: Border.all(
+              color: AppColors.gold.withOpacity(0.38),
+              width: 1,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.green.withOpacity(0.08),
+                blurRadius: 10,
+                offset: const Offset(0, 5),
+              ),
+            ],
+          ),
+          child: Stack(
+            children: [
+              // Corner decoration
+              Positioned(
+                top: 5,
+                left: 5,
+                child: Icon(
+                  Icons.auto_awesome,
+                  size: 10,
+                  color: AppColors.gold.withOpacity(0.55),
+                ),
+              ),
+
+              Positioned(
+                top: 5,
+                right: 5,
+                child: Icon(
+                  Icons.auto_awesome,
+                  size: 10,
+                  color: AppColors.gold.withOpacity(0.55),
+                ),
+              ),
+
+              // Main content
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 55,
+                      height: 55,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
+                          colors: [
+                            AppColors.green.withOpacity(0.12),
+                            AppColors.gold.withOpacity(0.10),
+                          ],
+                        ),
+                        border: Border.all(
+                          color: AppColors.gold.withOpacity(0.55),
+                          width: 1.2,
+                        ),
+                      ),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Container(
+                            width: 43,
+                            height: 43,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: AppColors.green.withOpacity(0.12),
+                              ),
+                            ),
+                          ),
+                          Icon(
+                            icon,
+                            color: AppColors.green,
+                            size: 26,
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 11),
+
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: Text(
+                        title,
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: AppColors.darkGreen,
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.w800,
+                          height: 1.25,
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 7),
+
+                    Container(
+                      width: 22,
+                      height: 2,
+                      decoration: BoxDecoration(
+                        color: AppColors.gold.withOpacity(0.65),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ============================================================
+// ISLAMIC BACKGROUND PAINTER
+// ============================================================
+
+class IslamicBackgroundPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = const Color(0xFF1E5631).withOpacity(0.05)
+    // ---------------------------------------------
+    // Very soft geometric pattern
+    // ---------------------------------------------
+
+    final patternPaint = Paint()
+      ..color = AppColors.green.withOpacity(0.045)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.2;
+      ..strokeWidth = 1;
+
+    const spacing = 70.0;
+
+    for (double x = -spacing; x < size.width + spacing; x += spacing) {
+      for (double y = -spacing; y < size.height + spacing; y += spacing) {
+        _drawIslamicStar(
+          canvas,
+          Offset(x, y),
+          27,
+          patternPaint,
+        );
+      }
+    }
+
+    // ---------------------------------------------
+    // Large central mandala
+    // ---------------------------------------------
 
     final center = Offset(
       size.width / 2,
-      size.height / 2.2,
+      size.height * 0.52,
     );
 
-    for (double radius = 40; radius <= 200; radius += 35) {
-      canvas.drawCircle(center, radius, paint);
-      _draw8PointStar(canvas, center, radius, paint);
+    final mandalaPaint = Paint()
+      ..color = AppColors.green.withOpacity(0.035)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.1;
+
+    for (double radius = 65; radius <= 240; radius += 35) {
+      canvas.drawCircle(center, radius, mandalaPaint);
+      _drawIslamicStar(
+        canvas,
+        center,
+        radius,
+        mandalaPaint,
+      );
     }
+
+    // ---------------------------------------------
+    // Mosque silhouette
+    // ---------------------------------------------
+
+    _drawMosqueSilhouette(canvas, size);
   }
 
-  void _draw8PointStar(
+  void _drawIslamicStar(
     Canvas canvas,
     Offset center,
     double radius,
     Paint paint,
   ) {
-    final path1 = Path();
-    final path2 = Path();
+    final path = Path();
 
-    // First square
-    for (int i = 0; i < 4; i++) {
-      final angle = i * 90 * math.pi / 180;
+    for (int i = 0; i < 16; i++) {
+      final angle = -math.pi / 2 + i * math.pi / 8;
 
-      final x = center.dx + radius * math.cos(angle);
-      final y = center.dy + radius * math.sin(angle);
+      final currentRadius =
+          i.isEven ? radius : radius * 0.46;
+
+      final x = center.dx + currentRadius * math.cos(angle);
+      final y = center.dy + currentRadius * math.sin(angle);
 
       if (i == 0) {
-        path1.moveTo(x, y);
+        path.moveTo(x, y);
       } else {
-        path1.lineTo(x, y);
+        path.lineTo(x, y);
       }
     }
 
-    path1.close();
+    path.close();
 
-    // Rotated square
-    for (int i = 0; i < 4; i++) {
-      final angle = (i * 90 + 45) * math.pi / 180;
+    canvas.drawPath(path, paint);
+  }
 
-      final x = center.dx + radius * math.cos(angle);
-      final y = center.dy + radius * math.sin(angle);
+  void _drawMosqueSilhouette(
+    Canvas canvas,
+    Size size,
+  ) {
+    final paint = Paint()
+      ..color = AppColors.green.withOpacity(0.035)
+      ..style = PaintingStyle.fill;
 
-      if (i == 0) {
-        path2.moveTo(x, y);
-      } else {
-        path2.lineTo(x, y);
-      }
-    }
+    final groundY = size.height - 15;
 
-    path2.close();
+    // Main mosque
+    final mosqueRect = Rect.fromLTWH(
+      size.width * 0.22,
+      groundY - 105,
+      size.width * 0.56,
+      105,
+    );
 
-    canvas.drawPath(path1, paint);
-    canvas.drawPath(path2, paint);
+    canvas.drawRect(mosqueRect, paint);
+
+    // Main dome
+    final domeCenter = Offset(
+      size.width / 2,
+      groundY - 105,
+    );
+
+    canvas.drawArc(
+      Rect.fromCenter(
+        center: domeCenter,
+        width: size.width * 0.30,
+        height: 100,
+      ),
+      math.pi,
+      math.pi,
+      true,
+      paint,
+    );
+
+    // Left minaret
+    canvas.drawRect(
+      Rect.fromLTWH(
+        size.width * 0.14,
+        groundY - 145,
+        17,
+        145,
+      ),
+      paint,
+    );
+
+    canvas.drawCircle(
+      Offset(size.width * 0.148, groundY - 150),
+      12,
+      paint,
+    );
+
+    // Right minaret
+    canvas.drawRect(
+      Rect.fromLTWH(
+        size.width * 0.79,
+        groundY - 145,
+        17,
+        145,
+      ),
+      paint,
+    );
+
+    canvas.drawCircle(
+      Offset(size.width * 0.798, groundY - 150),
+      12,
+      paint,
+    );
+
+    // Door
+    final doorRect = Rect.fromCenter(
+      center: Offset(
+        size.width / 2,
+        groundY - 34,
+      ),
+      width: 38,
+      height: 68,
+    );
+
+    canvas.drawArc(
+      doorRect,
+      math.pi,
+      math.pi,
+      true,
+      paint,
+    );
+
+    // Small crescent
+    final crescentPaint = Paint()
+      ..color = AppColors.gold.withOpacity(0.16)
+      ..style = PaintingStyle.fill;
+
+    final moonCenter = Offset(
+      size.width * 0.82,
+      size.height * 0.22,
+    );
+
+    canvas.drawCircle(
+      moonCenter,
+      23,
+      crescentPaint,
+    );
+
+    final cutPaint = Paint()
+      ..color = const Color(0xFFE9E9E0)
+      ..style = PaintingStyle.fill;
+
+    canvas.drawCircle(
+      moonCenter.translate(9, -7),
+      21,
+      cutPaint,
+    );
   }
 
   @override
@@ -490,6 +891,10 @@ class IslamicMandalaPainter extends CustomPainter {
     return false;
   }
 }
+
+// ============================================================
+// WEBVIEW SCREEN
+// ============================================================
 
 class WebViewScreen extends StatefulWidget {
   final String url;
@@ -516,6 +921,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(const Color(0xFFF4F1E8))
       ..setNavigationDelegate(
         NavigationDelegate(
           onPageStarted: (String url) {
@@ -559,14 +965,14 @@ class _WebViewScreenState extends State<WebViewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF2F4F7),
+      backgroundColor: AppColors.cream,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1E5631),
+        backgroundColor: AppColors.darkGreen,
+        foregroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back_ios_new_rounded,
-            color: Colors.white,
             size: 20,
           ),
           onPressed: () => Navigator.pop(context),
@@ -575,15 +981,15 @@ class _WebViewScreenState extends State<WebViewScreen> {
           widget.title,
           style: const TextStyle(
             color: Colors.white,
-            fontSize: 17,
-            fontWeight: FontWeight.bold,
+            fontSize: 16,
+            fontWeight: FontWeight.w800,
           ),
         ),
         actions: [
           IconButton(
             icon: const Icon(
               Icons.home_rounded,
-              color: Color(0xFFE8C547),
+              color: AppColors.gold,
             ),
             onPressed: () => Navigator.pop(context),
           ),
@@ -600,8 +1006,9 @@ class _WebViewScreenState extends State<WebViewScreen> {
         children: [
           if (isLoading)
             const LinearProgressIndicator(
-              color: Color(0xFFE8C547),
-              backgroundColor: Color(0xFF1E5631),
+              minHeight: 2,
+              color: AppColors.gold,
+              backgroundColor: AppColors.green,
             ),
 
           Expanded(
@@ -610,49 +1017,81 @@ class _WebViewScreenState extends State<WebViewScreen> {
             ),
           ),
 
-          // Bottom Navigation
+          // Bottom navigation
           Container(
-            height: 52,
+            height: 56,
             decoration: BoxDecoration(
               color: Colors.white,
+              border: const Border(
+                top: BorderSide(
+                  color: Color(0xFFE5E1D5),
+                ),
+              ),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.06),
-                  blurRadius: 6,
+                  blurRadius: 8,
                   offset: const Offset(0, -2),
                 ),
               ],
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.arrow_back_ios_rounded,
-                    color: Color(0xFF1E5631),
-                    size: 20,
-                  ),
-                  onPressed: _goBack,
+                _WebButton(
+                  icon: Icons.arrow_back_ios_rounded,
+                  onTap: _goBack,
                 ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    color: Color(0xFF1E5631),
-                    size: 20,
-                  ),
-                  onPressed: _goForward,
+                _WebButton(
+                  icon: Icons.arrow_forward_ios_rounded,
+                  onTap: _goForward,
                 ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.home_outlined,
-                    color: Color(0xFF1E5631),
-                  ),
-                  onPressed: () => Navigator.pop(context),
+                _WebButton(
+                  icon: Icons.home_outlined,
+                  onTap: () => Navigator.pop(context),
                 ),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+// ============================================================
+// WEBVIEW BUTTON
+// ============================================================
+
+class _WebButton extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onTap;
+
+  const _WebButton({
+    required this.icon,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: onTap,
+        child: Container(
+          width: 48,
+          height: 42,
+          decoration: BoxDecoration(
+            color: AppColors.green.withOpacity(0.07),
+            borderRadius: BorderRadius.circular(14),
+          ),
+          child: Icon(
+            icon,
+            color: AppColors.green,
+            size: 19,
+          ),
+        ),
       ),
     );
   }
